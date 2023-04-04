@@ -11,6 +11,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class HttpRequestMessageParserTest {
 
     @Test
+    @DisplayName("요청 메시지의 start-line 에서 요청 메서드를 파싱할 수 있다.")
+    void parseMethod() {
+        String firstLine = "GET /index.html HTTP/1.1";
+
+        String method = HttpRequestMessageParser.parseMethod(firstLine);
+
+        assertEquals("GET", method);
+    }
+
+
+    @Test
     @DisplayName("요청 메시지의 start-line 에서 URL을 파싱할 수 있다.")
     void parseUrl() {
         String firstLine = "GET /index.html HTTP/1.1";

@@ -5,11 +5,16 @@ import java.util.Map;
 
 public class HttpRequestMessageParser {
 
+    private static final int METHOD = 0;
     private static final int URL = 1;
     private static final int PARAMETER = 1;
     private static final int PARAMNAME = 0;
     private static final int PARAMVALUE = 1;
 
+
+    public static String parseMethod(String startLine) {
+        return startLine.split(" ")[METHOD];
+    }
 
     public static String parseUrl(String startLine) {
         String url = startLine.split(" ")[URL];

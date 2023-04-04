@@ -1,13 +1,12 @@
 package webserver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RequestHandler implements Runnable {
 
@@ -29,8 +28,9 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
-            String url = HttpRequestMessageParser.parseUrl(line);
 
+            String method = HttpRequestMessageParser.parseMethod(line);
+            String url = HttpRequestMessageParser.parseUrl(line);
             Map<String, String> paramMap = HttpRequestMessageParser.parseParams(url);
 
             while (!line.equals("")) {
