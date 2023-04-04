@@ -1,11 +1,13 @@
 package webserver;
 
+import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 public class RequestHandler implements Runnable {
 
@@ -27,7 +29,15 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
-            String url = parseURL(line);
+
+            String method = HttpRequestMessageParser.parseMethod(line);                     // HttpRequestMessageParser 클래스를 활용해 method, url, parameter를 파싱
+            String url = HttpRequestMessageParser.parseUrl(line);
+            Map<String, String> paramMap = HttpRequestMessageParser.parseParams(line);
+
+            if (method.equals("GET") && paramMap != null) {         // 만약 GET 메서드 요청이 파라미터를 갖고 있다면, User 클래스 생성
+                User user = new User(paramMap);
+                logger.debug("{}", user);
+            }
 
             while (!line.equals("")) {
                 logger.debug(line);
@@ -42,14 +52,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private String parseURL(String startLine) {
-        String url = startLine.split(" ")[1];
-        if (url.equals("/")) {
-            url = "/index.html";
-        }
-        return url;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
