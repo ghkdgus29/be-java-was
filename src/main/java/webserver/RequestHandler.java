@@ -31,6 +31,8 @@ public class RequestHandler implements Runnable {
             String line = br.readLine();
             String url = HttpRequestMessageParser.parseUrl(line);
 
+            Map<String, String> paramMap = HttpRequestMessageParser.parseParams(url);
+
             while (!line.equals("")) {
                 logger.debug(line);
                 line = br.readLine();
