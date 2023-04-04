@@ -5,8 +5,14 @@ import java.util.Map;
 
 public class HttpRequestMessageParser {
 
+    private static final int URL = 1;
+    private static final int PARAMETER = 1;
+    private static final int PARAMNAME = 0;
+    private static final int PARAMVALUE = 1;
+
+
     public static String parseUrl(String startLine) {
-        String url = startLine.split(" ")[1];
+        String url = startLine.split(" ")[URL];
         if (url.equals("/")) {
             url = "/index.html";
         }
@@ -18,14 +24,18 @@ public class HttpRequestMessageParser {
             return null;
         }
 
-        String paramLine = url.split("\\?")[1];
+        String paramLine = url.split("\\?")[PARAMETER];
         String[] params = paramLine.split("&");
 
+        return makeParamMap(params);
+    }
+
+    private static HashMap<String, String> makeParamMap(String[] params) {
         HashMap<String, String> paramMap = new HashMap<>();
 
         for (String param : params) {
-            String paramName = param.split("=")[0];
-            String paramValue = param.split("=")[1];
+            String paramName = param.split("=")[PARAMNAME];
+            String paramValue = param.split("=")[PARAMVALUE];
             paramMap.put(paramName, paramValue);
         }
 
