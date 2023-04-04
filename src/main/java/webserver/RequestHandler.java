@@ -3,6 +3,8 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,7 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
-            String url = parseURL(line);
+            String url = HttpRequestMessageParser.parseUrl(line);
 
             while (!line.equals("")) {
                 logger.debug(line);
@@ -42,14 +44,6 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private String parseURL(String startLine) {
-        String url = startLine.split(" ")[1];
-        if (url.equals("/")) {
-            url = "/index.html";
-        }
-        return url;
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
