@@ -2,53 +2,50 @@ package webserver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HttpRequest {
 
     private static final int METHOD = 0;
-    private static final int URL = 1;
-    private static final int PARAMETER = 1;
     private static final int PARAM_NAME = 0;
     private static final int PARAM_VALUE = 1;
 
 
     public static String parseMethod(String startLine) {
-        return splitAndGet(startLine, " ", METHOD);
+        return startLine.split(" ")[METHOD];
     }
 
     public static String parseUrl(String startLine) {
-        String url = splitAndGet(startLine, " ", URL);
-
-        if (url.contains("?")) {                    // 만약 url 에 파라미터가 존재하면
-            url = url.split("\\?")[0];        // 파라미터 부분은 제거
-        }
+        Matcher matcher = Pattern.compile("/.*(?=\\?)|/.*(?= )").matcher(startLine);
+        String url = parseBy(matcher);
 
         if (url.equals("/")) {
             url = "/index.html";
         }
+
         return url;
     }
 
     public static Map<String, String> parseParams(String startLine) {
-        String url = splitAndGet(startLine, " ", URL);
-
-        if (!url.contains("?")) {               // 만약 url 에 파라미터가 존재하지 않으면
-            return null;                        // 파싱 종료
+        if (!startLine.contains("?")) {               // 만약 url 에 파라미터가 존재하지 않으면
+            return null;                              // 파싱 종료
         }
 
-        String paramLine = splitAndGet(url, "\\?", PARAMETER);
-        String[] params = paramLine.split("&");
+        Matcher matcher = Pattern.compile("(?<=\\?).*(?= )").matcher(startLine);
+        String parameter = parseBy(matcher);
+        String[] params = parameter.split("&");
 
         return makeParamMap(params);
     }
 
-    /**
-     * 요청 메시지의 start-line 을 빈칸으로 쪼개고, part 에 해당하는 부분을 반환
-     *
-     * @param part METHOD(0), URL(1)
-     */
-    private static String splitAndGet(String line, String delimiter, int part) {
-        return line.split(delimiter)[part];
+    private static String parseBy(Matcher matcher) {
+        String parameter="";
+
+        if (matcher.find()) {
+            parameter = matcher.group();
+        }
+        return parameter;
     }
 
 

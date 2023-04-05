@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,6 +29,16 @@ class HttpRequestTest {
         String url = HttpRequest.parseUrl(startLine);
 
         assertEquals("/user/create", url);
+    }
+
+    @Test
+    @DisplayName("요청 메시지의 start-line 에 파라미터가 없더라도 URL을 파싱할 수 있다.")
+    void parseUrlWithoutParam() {
+        String startLine = "GET /index.html HTTP/1.1";
+
+        String url = HttpRequest.parseUrl(startLine);
+
+        assertEquals("/index.html", url);
     }
 
     @Test
