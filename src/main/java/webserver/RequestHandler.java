@@ -1,13 +1,13 @@
 package webserver;
 
 import model.User;
+import model.dto.StartLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.Map;
 
 public class RequestHandler implements Runnable {
 
@@ -29,13 +29,10 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
+            StartLine startLine = HttpRequest.getStartLine(line);
 
-            String method = HttpRequest.parseMethod(line);                     // HttpRequestMessageParser 클래스를 활용해 method, url, parameter를 파싱
-            String url = HttpRequest.parseUrl(line);
-            Map<String, String> paramMap = HttpRequest.parseParams(line);
-
-            if (method.equals("GET") && paramMap != null) {         // 만약 GET 메서드 요청이 파라미터를 갖고 있다면, User 클래스 생성
-                User user = new User(paramMap);
+            if (startLine.getMethod().equals("GET") && startLine.getParamMap() != null) {         // 만약 GET 메서드 요청이 파라미터를 갖고 있다면, User 클래스 생성
+                User user = new User(startLine.getParamMap());
                 logger.debug("{}", user);
             }
 
@@ -45,7 +42,7 @@ public class RequestHandler implements Runnable {
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(PATH + url).toPath());
+            byte[] body = Files.readAllBytes(new File(PATH + startLine.getUrl()).toPath());
 
             HttpResponse.sendResponse200(dos, body);
         } catch (IOException e) {
