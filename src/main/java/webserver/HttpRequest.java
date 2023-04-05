@@ -1,6 +1,6 @@
 package webserver;
 
-import model.dto.StartLine;
+import model.StartLine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +29,6 @@ public class HttpRequest {
         if (matcher.find()) {
             url = matcher.group();
         }
-
-        if (url.equals("/")) {
-            url = "/index.html";
-        }
-
         return url;
     }
 

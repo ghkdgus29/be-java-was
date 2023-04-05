@@ -1,7 +1,7 @@
 package webserver;
 
 import model.User;
-import model.dto.StartLine;
+import model.StartLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,17 +35,13 @@ public class RequestHandler implements Runnable {
                 logger.debug("{}", user);
             }
 
-            StringBuilder requestHeader = new StringBuilder();
             while (!line.equals("")) {
                 logger.debug(line);
                 line = br.readLine();
-                requestHeader.append(line);
             }
 
-            logger.info("HTTP Request 헤더 {}", requestHeader);
-
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(startLine.getUrl()).toPath());
+            byte[] body = Files.readAllBytes(new File(startLine.getPath()).toPath());
 
             HttpResponse.sendResponse200(dos, body);
         } catch (IOException e) {

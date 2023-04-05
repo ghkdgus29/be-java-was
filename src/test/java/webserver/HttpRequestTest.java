@@ -1,6 +1,6 @@
 package webserver;
 
-import model.dto.StartLine;
+import model.StartLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ class HttpRequestTest {
 
         StartLine startLine = HttpRequest.getStartLine(startLineChunk);
 
-        assertEquals( PATH + "/user/create", startLine.getUrl());
+        assertEquals( PATH + "/user/create", startLine.getPath());
     }
 
     @Test
@@ -40,7 +40,7 @@ class HttpRequestTest {
 
         StartLine startLine = HttpRequest.getStartLine(startLineChunk);
 
-        assertEquals(PATH + "/index.html", startLine.getUrl());
+        assertEquals(PATH + "/index.html", startLine.getPath());
     }
 
     @Test
