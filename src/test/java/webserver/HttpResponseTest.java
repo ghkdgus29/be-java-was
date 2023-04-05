@@ -1,5 +1,6 @@
 package webserver;
 
+import model.StartLine;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,6 @@ class HttpResponseTest {
     void sendResponse200() {
         byte[] body = "hiiiiiiiiiiiiiii\n".getBytes();
 
-        HttpResponse.sendResponse200(new DataOutputStream(System.out), body);
+        HttpResponse.sendResponse200(new DataOutputStream(System.out), body, new StartLine(null, "/", null));
     }
 }

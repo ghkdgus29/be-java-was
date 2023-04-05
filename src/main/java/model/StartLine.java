@@ -10,12 +10,18 @@ public class StartLine {
     private final String path;
     private final Map<String, String> paramMap;
     private final boolean cssRequest;
+    private final boolean jsRequest;
+    private final boolean fontRequest;
 
-    public StartLine(String method, String path, Map<String, String> paramMap) {
+    public StartLine(String method, String url, Map<String, String> paramMap) {
         this.method = method;
-        this.path = decideAbsolutePath(path);
         this.paramMap = paramMap;
-        this.cssRequest = path.contains(".css");
+
+        this.cssRequest = url.startsWith("/css");
+        this.jsRequest = url.startsWith("/js");
+        this.fontRequest = url.startsWith("/fonts");
+
+        this.path = decideAbsolutePath(url);
     }
 
     public String getMethod() {
@@ -34,8 +40,16 @@ public class StartLine {
         return cssRequest;
     }
 
+    public boolean isJsRequest() {
+        return jsRequest;
+    }
+
+    public boolean isFontRequest() {
+        return fontRequest;
+    }
+
     private String decideAbsolutePath(String url) {
-        if (url.contains(".css")) {
+        if (cssRequest || jsRequest || fontRequest) {
             return STYLE_PATH + url;
         }
 

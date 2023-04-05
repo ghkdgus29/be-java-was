@@ -43,7 +43,7 @@ public class RequestHandler implements Runnable {
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = Files.readAllBytes(new File(startLine.getPath()).toPath());
 
-            HttpResponse.sendResponse200(dos, body);
+            HttpResponse.sendResponse200(dos, body, startLine);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
