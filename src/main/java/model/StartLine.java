@@ -1,27 +1,26 @@
 package model;
 
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StartLine {
 
     private static final String HTML_PATH = "src/main/resources/templates";
     private static final String STYLE_PATH = "src/main/resources/static";
+    private static final List<String> STYLE_TYPE = List.of("css", "js", "fonts");
+
     private final String method;
     private final String path;
     private final Map<String, String> paramMap;
-    private final boolean cssRequest;
-    private final boolean jsRequest;
-    private final boolean fontRequest;
+    private final String requestType;
 
     public StartLine(String method, String url, Map<String, String> paramMap) {
         this.method = method;
-        this.paramMap = paramMap;
-
-        this.cssRequest = url.startsWith("/css");
-        this.jsRequest = url.startsWith("/js");
-        this.fontRequest = url.startsWith("/fonts");
-
         this.path = decideAbsolutePath(url);
+        this.paramMap = paramMap;
+        this.requestType = decideRequestType(url);
     }
 
     public String getMethod() {
@@ -36,20 +35,12 @@ public class StartLine {
         return paramMap;
     }
 
-    public boolean isCssRequest() {
-        return cssRequest;
-    }
-
-    public boolean isJsRequest() {
-        return jsRequest;
-    }
-
-    public boolean isFontRequest() {
-        return fontRequest;
+    public String getRequestType() {
+        return requestType;
     }
 
     private String decideAbsolutePath(String url) {
-        if (cssRequest || jsRequest || fontRequest) {
+        if (url.startsWith("/css") || url.startsWith("/js") || url.startsWith("/fonts")) {
             return STYLE_PATH + url;
         }
 
@@ -58,5 +49,21 @@ public class StartLine {
         }
 
         return HTML_PATH + url;
+    }
+
+    /**
+     * 요청 url을 바탕으로 타입을 구분
+     * @param url
+     * @return (html, css, js, fonts)
+     */
+    private String decideRequestType(String url) {
+        Matcher matcher = Pattern.compile("(?<=/).*(?=/)").matcher(url);        // 요청 url의 /~/  슬래쉬 사이의 ~부분을 추출
+
+        if (matcher.find()) {
+            String requestType = matcher.group();
+            return STYLE_TYPE.contains(requestType) ? requestType : "html";
+        }
+
+        return "html";
     }
 }
