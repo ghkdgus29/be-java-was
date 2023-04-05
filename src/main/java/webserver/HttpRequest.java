@@ -3,7 +3,7 @@ package webserver;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpRequestMessageParser {
+public class HttpRequest {
 
     private static final int METHOD = 0;
     private static final int URL = 1;

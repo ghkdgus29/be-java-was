@@ -1,6 +1,5 @@
 package webserver;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -8,14 +7,14 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class HttpRequestMessageParserTest {
+class HttpRequestTest {
 
     @Test
     @DisplayName("요청 메시지의 start-line 에서 요청 메서드를 파싱할 수 있다.")
     void parseMethod() {
         String startLine = "GET /index.html HTTP/1.1";
 
-        String method = HttpRequestMessageParser.parseMethod(startLine);
+        String method = HttpRequest.parseMethod(startLine);
 
         assertEquals("GET", method);
     }
@@ -25,7 +24,7 @@ class HttpRequestMessageParserTest {
     void parseUrl() {
         String startLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
 
-        String url = HttpRequestMessageParser.parseUrl(startLine);
+        String url = HttpRequest.parseUrl(startLine);
 
         assertEquals("/user/create", url);
     }
@@ -40,7 +39,7 @@ class HttpRequestMessageParserTest {
                 "name", "%ED%99%A9%ED%98%84",
                 "email", "ghkdgus29%40naver.com");
 
-        Map<String, String> params = HttpRequestMessageParser.parseParams(startLine);
+        Map<String, String> params = HttpRequest.parseParams(startLine);
 
         assertEquals(expectedParams, params);
     }
@@ -50,7 +49,7 @@ class HttpRequestMessageParserTest {
     void parseNoParams() {
         String startLine = "GET /user/create HTTP/1.1";
 
-        Map<String, String> params = HttpRequestMessageParser.parseParams(startLine);
+        Map<String, String> params = HttpRequest.parseParams(startLine);
 
         assertNull(params);
     }
