@@ -11,7 +11,6 @@ import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
 
-    private static final String PATH = "src/main/resources/templates";
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
@@ -36,13 +35,17 @@ public class RequestHandler implements Runnable {
                 logger.debug("{}", user);
             }
 
+            StringBuilder requestHeader = new StringBuilder();
             while (!line.equals("")) {
                 logger.debug(line);
                 line = br.readLine();
+                requestHeader.append(line);
             }
 
+            logger.info("HTTP Request 헤더 {}", requestHeader);
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(PATH + startLine.getUrl()).toPath());
+            byte[] body = Files.readAllBytes(new File(startLine.getUrl()).toPath());
 
             HttpResponse.sendResponse200(dos, body);
         } catch (IOException e) {

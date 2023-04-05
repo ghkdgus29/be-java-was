@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HttpRequestTest {
 
+    private static final String PATH = "src/main/resources/templates";
+
     @Test
     @DisplayName("요청 메시지의 start-line 에서 요청 메서드를 파싱할 수 있다.")
     void parseMethod() {
@@ -28,7 +30,7 @@ class HttpRequestTest {
 
         StartLine startLine = HttpRequest.getStartLine(startLineChunk);
 
-        assertEquals("/user/create", startLine.getUrl());
+        assertEquals( PATH + "/user/create", startLine.getUrl());
     }
 
     @Test
@@ -38,7 +40,7 @@ class HttpRequestTest {
 
         StartLine startLine = HttpRequest.getStartLine(startLineChunk);
 
-        assertEquals("/index.html", startLine.getUrl());
+        assertEquals(PATH + "/index.html", startLine.getUrl());
     }
 
     @Test
