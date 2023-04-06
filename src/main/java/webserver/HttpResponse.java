@@ -14,7 +14,9 @@ public class HttpResponse {
     private static final Map<String, String> contentType = Map.of("css", "text/css",
             "js", "application/javascript",
             "fonts", "application/octet-stream",
-            "html", "text/html;charset=utf-8");
+            "html", "text/html;charset=utf-8",
+            "png", "image/png",
+            "ico", "image/avif");
 
     public static void sendResponse200(DataOutputStream dos, byte[] body, StartLine startLine) {
         try {

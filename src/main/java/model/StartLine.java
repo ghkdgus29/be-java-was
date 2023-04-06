@@ -1,15 +1,20 @@
 package model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.RequestHandler;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StartLine {
+    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private static final String TEMPLATES_PATH = "src/main/resources/templates";
     private static final String STATIC_PATH = "src/main/resources/static";
-    private static final List<String> STATIC_TYPE = List.of("css", "js", "fonts");
+    private static final List<String> STATIC_TYPE = List.of("css", "js", "fonts", "png", "ico");
 
     private final String method;
     private final String path;
@@ -40,30 +45,28 @@ public class StartLine {
     }
 
     private String decideAbsolutePath(String url) {
-        if (url.startsWith("/css") || url.startsWith("/js") || url.startsWith("/fonts")) {
+        if (STATIC_TYPE.stream().anyMatch((type) -> url.endsWith("." + type))) {
             return STATIC_PATH + url;
         }
-
         if (url.equals("/")) {
-            url = "/index.html";
+            return TEMPLATES_PATH + "/index.html";
         }
-
         return TEMPLATES_PATH + url;
     }
 
     /**
      * 요청 url을 바탕으로 타입을 구분
      * @param url
-     * @return (html, css, js, fonts)
+     * @return (html, css, js, fonts, png, ico)
      */
     private String decideRequestType(String url) {
-        Matcher matcher = Pattern.compile("(?<=/).*(?=/)").matcher(url);        // 요청 url의 /~/  슬래쉬 사이의 ~부분을 추출
+        String requestType = STATIC_TYPE.stream()
+                .filter(type -> url.endsWith("." + type))
+                .findAny()
+                .orElse("html");
 
-        if (matcher.find()) {
-            String requestType = matcher.group();
-            return STATIC_TYPE.contains(requestType) ? requestType : "html";
-        }
+        logger.info("파싱된 type {}", requestType);
 
-        return "html";
+        return requestType;
     }
 }
