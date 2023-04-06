@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 public class StartLine {
 
-    private static final String HTML_PATH = "src/main/resources/templates";
-    private static final String STYLE_PATH = "src/main/resources/static";
-    private static final List<String> STYLE_TYPE = List.of("css", "js", "fonts");
+    private static final String TEMPLATES_PATH = "src/main/resources/templates";
+    private static final String STATIC_PATH = "src/main/resources/static";
+    private static final List<String> STATIC_TYPE = List.of("css", "js", "fonts");
 
     private final String method;
     private final String path;
@@ -41,14 +41,14 @@ public class StartLine {
 
     private String decideAbsolutePath(String url) {
         if (url.startsWith("/css") || url.startsWith("/js") || url.startsWith("/fonts")) {
-            return STYLE_PATH + url;
+            return STATIC_PATH + url;
         }
 
         if (url.equals("/")) {
             url = "/index.html";
         }
 
-        return HTML_PATH + url;
+        return TEMPLATES_PATH + url;
     }
 
     /**
@@ -61,7 +61,7 @@ public class StartLine {
 
         if (matcher.find()) {
             String requestType = matcher.group();
-            return STYLE_TYPE.contains(requestType) ? requestType : "html";
+            return STATIC_TYPE.contains(requestType) ? requestType : "html";
         }
 
         return "html";
