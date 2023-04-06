@@ -14,7 +14,7 @@ public class StartLine {
 
     private static final String TEMPLATES_PATH = "src/main/resources/templates";
     private static final String STATIC_PATH = "src/main/resources/static";
-    private static final List<String> STATIC_TYPE = List.of("css", "js", "fonts", "png", "ico");
+    private static final List<String> STATIC_TYPE = List.of("css", "js", "png", "ico");
 
     private final String method;
     private final String path;
@@ -45,7 +45,7 @@ public class StartLine {
     }
 
     private String decideAbsolutePath(String url) {
-        if (STATIC_TYPE.stream().anyMatch((type) -> url.endsWith("." + type))) {
+        if (STATIC_TYPE.stream().anyMatch((type) -> url.endsWith("." + type)) || url.startsWith("/fonts")) {
             return STATIC_PATH + url;
         }
         if (url.equals("/")) {
@@ -56,6 +56,7 @@ public class StartLine {
 
     /**
      * 요청 url을 바탕으로 타입을 구분
+     *
      * @param url
      * @return (html, css, js, fonts, png, ico)
      */
@@ -64,6 +65,12 @@ public class StartLine {
                 .filter(type -> url.endsWith("." + type))
                 .findAny()
                 .orElse("html");
+
+        logger.debug("파싱된 url{}", url);
+
+        if (url.startsWith("/fonts")) {
+            return "fonts";
+        }
 
         logger.info("파싱된 type {}", requestType);
 
