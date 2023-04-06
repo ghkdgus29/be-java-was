@@ -13,10 +13,10 @@ public class HttpRequest {
     private static final int PARAM_NAME = 0;
     private static final int PARAM_VALUE = 1;
 
-    public static StartLine getStartLine(String startLine) {
-        return new StartLine(parseMethod(startLine),
-                parseUrl(startLine),
-                parseParams(startLine));
+    public static StartLine getStartLine(String startLineChunk) {
+        return new StartLine(parseMethod(startLineChunk),
+                parseUrl(startLineChunk),
+                parseParams(startLineChunk));
     }
 
     private static String parseMethod(String startLine) {
