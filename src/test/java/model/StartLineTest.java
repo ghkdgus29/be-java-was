@@ -23,7 +23,7 @@ class StartLineTest {
         StartLine startLine = new StartLine(mockMethod, url, mockParam);
 
         assertEquals(expectedUrl, startLine.getPath());
-        assertEquals("html", startLine.getRequestType());
+        assertEquals(RequestType.HTML, startLine.getRequestType());
     }
 
     @Test
@@ -37,6 +37,6 @@ class StartLineTest {
         StartLine startLine = new StartLine(mockMethod, url, mockParam);
 
         assertEquals(expectedUrl, startLine.getPath());
-        assertEquals("css", startLine.getRequestType());
+        assertEquals(RequestType.CSS, startLine.getRequestType());
     }
 }
