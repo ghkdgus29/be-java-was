@@ -9,18 +9,18 @@ import java.util.regex.Pattern;
 
 public class HttpRequest {
 
-    private static final int METHOD = 0;
-    private static final int PARAM_NAME = 0;
-    private static final int PARAM_VALUE = 1;
+    private static final int METHOD_IDX = 0;
+    private static final int PARAM_NAME_IDX = 0;
+    private static final int PARAM_VALUE_IDX = 1;
 
-    public static StartLine getStartLine(String startLine) {
-        return new StartLine(parseMethod(startLine),
-                parseUrl(startLine),
-                parseParams(startLine));
+    public static StartLine getStartLine(String startLineChunk) {
+        return new StartLine(parseMethod(startLineChunk),
+                parseUrl(startLineChunk),
+                parseParams(startLineChunk));
     }
 
     private static String parseMethod(String startLine) {
-        return startLine.split(" ")[METHOD];
+        return startLine.split(" ")[METHOD_IDX];
     }
 
     private static String parseUrl(String startLine) {
@@ -56,8 +56,8 @@ public class HttpRequest {
         HashMap<String, String> paramMap = new HashMap<>();
 
         for (String param : params) {
-            String paramName = param.split("=")[PARAM_NAME];
-            String paramValue = param.split("=")[PARAM_VALUE];
+            String paramName = param.split("=")[PARAM_NAME_IDX];
+            String paramValue = param.split("=")[PARAM_VALUE_IDX];
             paramMap.put(paramName, paramValue);
         }
 
