@@ -1,8 +1,8 @@
 package servlet;
 
-import model.RequestType;
 import servlet.controller.Controller;
 import servlet.controller.IndexController;
+import servlet.controller.UserFormController;
 import webserver.HttpRequest;
 
 import java.util.HashMap;
@@ -16,6 +16,7 @@ public class DispatcherServlet {
         HashMap<String, Controller> controllerMap = new HashMap<>();
 
         controllerMap.put("/", new IndexController());
+        controllerMap.put("/user/form.html", new UserFormController());
 
         return controllerMap;
     }
