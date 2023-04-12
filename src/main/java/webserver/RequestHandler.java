@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import servlet.DispatcherServlet;
 import util.RequestSeparater;
+import util.ResponseAssembler;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
 
@@ -31,10 +31,9 @@ public class RequestHandler implements Runnable {
             String viewName = DispatcherServlet.service(httpRequest);
             String absolutePath = resolveView(viewName, httpRequest);
 
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(absolutePath).toPath());
-            HttpResponse.sendResponse200(dos, body, httpRequest);
+            HttpResponse httpResponse = ResponseAssembler.askHttpResponse(httpRequest, absolutePath);
 
+            sendResponseMessage(out, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
@@ -42,5 +41,11 @@ public class RequestHandler implements Runnable {
 
     private static String resolveView(String viewName, HttpRequest httpRequest) {
         return httpRequest.getAbsolutePath(viewName);
+    }
+
+    private static void sendResponseMessage(OutputStream out, HttpResponse httpResponse) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.writeBytes(httpResponse.getHeaders());
+        dos.write(httpResponse.getMessageBody());
     }
 }
