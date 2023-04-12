@@ -1,19 +1,13 @@
 package util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import webserver.HttpRequest;
-import webserver.RequestHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RequestSeparater {
-
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private static final int HEADER_NAME_IDX = 0;
     private static final int HEADER_VALUE_IDX = 1;
@@ -54,7 +48,6 @@ public class RequestSeparater {
 
         String line = br.readLine();
         while (!line.equals("")) {
-            logger.error(line);
             addHeader(line, headers);
             line = br.readLine();
         }
