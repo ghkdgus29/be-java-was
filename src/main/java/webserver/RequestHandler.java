@@ -1,6 +1,5 @@
 package webserver;
 
-import model.User;
 import model.StartLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +28,6 @@ public class RequestHandler implements Runnable {
 
             String line = br.readLine();
             StartLine startLine = HttpRequest.getStartLine(line);
-
-            if (startLine.getMethod().equals("GET") && startLine.getParamMap() != null) {         // 만약 GET 메서드 요청이 파라미터를 갖고 있다면, User 클래스 생성
-                User user = new User(startLine.getParamMap());
-                logger.debug("{}", user);
-            }
 
             while (!line.equals("")) {
                 logger.debug(line);
