@@ -1,15 +1,11 @@
 package model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import webserver.RequestHandler;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StartLine {
+public class RequestLine {
 
     private static final int METHOD_IDX = 0;
     private static final int PARAM_NAME_IDX = 0;
@@ -18,15 +14,13 @@ public class StartLine {
     private final String method;
     private final String url;
     private final RequestType requestType;
-    private final String path;
     private final Map<String, String> paramMap;
 
 
-    public StartLine(String requestLine) {
+    public RequestLine(String requestLine) {
         this.method = parseMethod(requestLine);
         this.url = parseUrl(requestLine);
         this.requestType = RequestType.of(url);
-        this.path = requestType.getAbsolutePath(url);
         this.paramMap = parseParams(requestLine);
     }
 
@@ -40,10 +34,6 @@ public class StartLine {
 
     public RequestType getRequestType() {
         return requestType;
-    }
-
-    public String getPath() {
-        return path;
     }
 
     public Map<String, String> getParamMap() {
