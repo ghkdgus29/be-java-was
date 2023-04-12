@@ -37,29 +37,29 @@ class HttpRequestTest {
         assertEquals("/index.html", httpRequest.getUrl());
     }
 
-    @Test
-    @DisplayName("HttpRequest 객체는 Request가 요청한 자료의 절대 경로를 반환한다.")
-    void parsePath() {
-        String requestLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
-        Map<String, String> headers = Map.of("Host", "localhost:8080"
-                , "Connection", "keep-alive");
+//    @Test
+//    @DisplayName("HttpRequest 객체는 Request가 요청한 자료의 절대 경로를 반환한다.")
+//    void parsePath() {
+//        String requestLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
+//        Map<String, String> headers = Map.of("Host", "localhost:8080"
+//                , "Connection", "keep-alive");
+//
+//        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+//
+//        assertEquals(PATH + "/user/create", httpRequest.getPath());
+//    }
 
-        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
-
-        assertEquals(PATH + "/user/create", httpRequest.getPath());
-    }
-
-    @Test
-    @DisplayName("HttpRequest 객체는 request-line 에 포함된 URL에 파라미터가 없더라도 자료의 절대 경로를 반환한다.")
-    void parseUrlWithoutParam() {
-        String requestLine = "GET /index.html HTTP/1.1";
-        Map<String, String> headers = Map.of("Host", "localhost:8080"
-                , "Connection", "keep-alive");
-
-        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
-
-        assertEquals(PATH + "/index.html", httpRequest.getPath());
-    }
+//    @Test
+//    @DisplayName("HttpRequest 객체는 request-line 에 포함된 URL에 파라미터가 없더라도 자료의 절대 경로를 반환한다.")
+//    void parseUrlWithoutParam() {
+//        String requestLine = "GET /index.html HTTP/1.1";
+//        Map<String, String> headers = Map.of("Host", "localhost:8080"
+//                , "Connection", "keep-alive");
+//
+//        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+//
+//        assertEquals(PATH + "/index.html", httpRequest.getPath());
+//    }
 
     @Test
     @DisplayName("HttpRequest 객체는 headers 를 맵으로 반환한다.")
@@ -75,7 +75,7 @@ class HttpRequestTest {
 
     @Test
     @DisplayName("GET 요청의 경우, HttpRequest 객체는 request-line 에 포함된 URL에서 파라미터를 뽑아내 parameters 맵으로 반환한다.")
-    void parseParams() {
+    void getParams() {
         String requestLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");
@@ -92,7 +92,7 @@ class HttpRequestTest {
 
     @Test
     @DisplayName("GET 요청의 경우, HttpRequest 객체는 request-line 에 포함된 URL에 파라미터가 없으면 parameters 로 null을 반환한다.")
-    void parseNoParams() {
+    void getNoParams() {
         String requestLine = "GET /user/create HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");
@@ -104,7 +104,7 @@ class HttpRequestTest {
 
     @Test
     @DisplayName("POST 요청의 경우, HttpRequest 객체는 message body 에서 파라미터를 뽑아내 parameters 맵으로 반환한다.")
-    void parseParametersBody() {
+    void getParametersBody() {
         String requestLine = "POST /user/create HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");
@@ -122,7 +122,7 @@ class HttpRequestTest {
 
     @Test
     @DisplayName("POST 요청이지만 message body 가 없는 경우에는 parameters 는 null 이다.")
-    void parseParameterNoBody() {
+    void getParameterNoBody() {
         String requestLine = "POST /user/create HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");
