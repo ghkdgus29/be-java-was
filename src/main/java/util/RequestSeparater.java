@@ -2,6 +2,7 @@ package util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.HttpRequest;
 import webserver.RequestHandler;
 
 import java.io.BufferedReader;
@@ -26,6 +27,10 @@ public class RequestSeparater {
         this.requestLine = setRequestLine(br);
         this.headers = setHeaders(br);
         this.messageBody = setMessageBody(br);
+    }
+
+    public HttpRequest askHttpRequest() {
+        return new HttpRequest(requestLine, headers, messageBody);
     }
 
     public String getRequestLine() {

@@ -27,7 +27,6 @@ public class RequestHandler implements Runnable {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
             String line = br.readLine();
-            StartLine startLine = HttpRequest.getStartLine(line);
 
             while (!line.equals("")) {
                 logger.debug(line);
@@ -35,9 +34,9 @@ public class RequestHandler implements Runnable {
             }
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(startLine.getPath()).toPath());
+//            byte[] body = Files.readAllBytes(new File(startLine.getPath()).toPath());
 
-            HttpResponse.sendResponse200(dos, body, startLine);
+//            HttpResponse.sendResponse200(dos, body, startLine);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
