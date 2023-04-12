@@ -1,13 +1,14 @@
 package util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.HttpRequest;
 
 import java.io.*;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RequestSeparaterTest {
 
@@ -25,15 +26,15 @@ class RequestSeparaterTest {
         InputStream in = new ByteArrayInputStream(request.getBytes());
         BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
-        RequestSeparater requestSeparater = new RequestSeparater(br);
+        HttpRequest httpRequest = RequestSeparater.askHttpRequest(br);
 
-        assertEquals("GET / HTTP/1.1", requestSeparater.getRequestLine());
+        assertEquals("GET", httpRequest.getMethod());
         assertEquals(Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive",
                 "sec-ch-ua", "\"Google Chrome\";v=\"111\", \"Not(A:Brand\";v=\"8\", \"Chromium\";v=\"111\"",
                 "sec-ch-ua-mobile", "?0",
-                "sec-ch-ua-platform", "\"Windows\""), requestSeparater.getHeaders());
-        assertNull(requestSeparater.getMessageBody());
+                "sec-ch-ua-platform", "\"Windows\""), httpRequest.getHeaders());
+        assertNull(httpRequest.getMessageBody());
     }
 
     @Test
@@ -52,9 +53,16 @@ class RequestSeparaterTest {
         InputStream in = new ByteArrayInputStream(request.getBytes());
         BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
-        RequestSeparater requestSeparater = new RequestSeparater(br);
+        HttpRequest httpRequest = RequestSeparater.askHttpRequest(br);
 
-        System.out.println(requestSeparater.getMessageBody());
+
+        assertEquals("POST", httpRequest.getMethod());
+        assertEquals(Map.of("Host", "localhost:8080"
+                , "Connection", "keep-alive",
+                "Content-Length", "51",
+                "Cache-Control", "max-age=0",
+                "sec-ch-ua", "\"Google Chrome\";v=\"111\", \"Not(A:Brand\";v=\"8\", \"Chromium\";v=\"111\"",
+                "sec-ch-ua-mobile", "?0"), httpRequest.getHeaders());
+        assertEquals("userId=hyun&password=1234&name=hyun&email=123%40123", httpRequest.getMessageBody());
     }
-
 }

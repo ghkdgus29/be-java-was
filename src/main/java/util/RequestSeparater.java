@@ -13,37 +13,20 @@ public class RequestSeparater {
     private static final int HEADER_VALUE_IDX = 1;
     private static final String CONTENT_LENGTH = "Content-Length";
 
-    private final String requestLine;
-    private final Map<String, String> headers;
-    private final String messageBody;
 
-    public RequestSeparater(final BufferedReader br) throws IOException {
-        this.requestLine = setRequestLine(br);
-        this.headers = setHeaders(br);
-        this.messageBody = setMessageBody(br);
-    }
+    public static HttpRequest askHttpRequest(final BufferedReader br) throws IOException{
+        String requestLine = getRequestLine(br);
+        Map<String, String> headers = parseHeaders(br);
+        String messageBody = getMessageBody(br, headers);
 
-    public HttpRequest askHttpRequest() {
         return new HttpRequest(requestLine, headers, messageBody);
     }
 
-    public String getRequestLine() {
-        return requestLine;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public String getMessageBody() {
-        return messageBody;
-    }
-
-    private String setRequestLine(final BufferedReader br) throws IOException {
+    private static String getRequestLine(final BufferedReader br) throws IOException {
         return br.readLine();
     }
 
-    private Map<String, String> setHeaders(final BufferedReader br) throws IOException {
+    private static Map<String, String> parseHeaders(final BufferedReader br) throws IOException {
         HashMap<String, String> headers = new HashMap<>();
 
         String line = br.readLine();
@@ -55,7 +38,7 @@ public class RequestSeparater {
         return headers;
     }
 
-    private String setMessageBody(final BufferedReader br) throws IOException {
+    private static String getMessageBody(final BufferedReader br, Map<String, String> headers) throws IOException {
         if (!headers.containsKey(CONTENT_LENGTH)) {
             return null;
         }
@@ -66,7 +49,7 @@ public class RequestSeparater {
         return String.valueOf(messageBody);
     }
 
-    private void addHeader(String line, Map<String, String> headers) {
+    private static void addHeader(String line, Map<String, String> headers) {
         String[] splitedLine = line.split(":", 2);
         String headerName = splitedLine[HEADER_NAME_IDX].trim();
         String headerValue = splitedLine[HEADER_VALUE_IDX].trim();

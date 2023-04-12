@@ -41,9 +41,12 @@ public class HttpRequest {
         return requestLine.getRequestType();
     }
 
-
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public String getMessageBody() {
+        return messageBody;
     }
 
     public Map<String, String> getParameters() {
