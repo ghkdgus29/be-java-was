@@ -3,6 +3,7 @@ package webserver;
 import model.StartLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.RequestSeparater;
 
 import java.io.*;
 import java.net.Socket;
@@ -26,17 +27,14 @@ public class RequestHandler implements Runnable {
 
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
-            String line = br.readLine();
+            RequestSeparater requestSeparater = new RequestSeparater(br);
+            HttpRequest httpRequest = requestSeparater.askHttpRequest();
 
-            while (!line.equals("")) {
-                logger.debug(line);
-                line = br.readLine();
-            }
 
             DataOutputStream dos = new DataOutputStream(out);
-//            byte[] body = Files.readAllBytes(new File(startLine.getPath()).toPath());
+            byte[] body = Files.readAllBytes(new File(httpRequest.getPath()).toPath());
 
-//            HttpResponse.sendResponse200(dos, body, startLine);
+            HttpResponse.sendResponse200(dos, body, httpRequest);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

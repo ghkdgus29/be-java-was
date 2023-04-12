@@ -1,5 +1,6 @@
 package webserver;
 
+import model.RequestType;
 import model.StartLine;
 
 import java.util.HashMap;
@@ -32,6 +33,10 @@ public class HttpRequest {
 
     public String getPath() {
         return startLine.getPath();
+    }
+
+    public RequestType getRequestType() {
+        return startLine.getRequestType();
     }
 
     public Map<String, String> getHeaders() {

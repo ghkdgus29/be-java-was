@@ -12,9 +12,9 @@ import java.util.Map;
 public class HttpResponse {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    public static void sendResponse200(DataOutputStream dos, byte[] body, StartLine startLine) {
+    public static void sendResponse200(DataOutputStream dos, byte[] body, HttpRequest httpRequest) {
         try {
-            dos.writeBytes(response200Header(body.length, startLine.getRequestType()));
+            dos.writeBytes(response200Header(body.length, httpRequest.getRequestType()));
 
             dos.write(body, 0, body.length);
             dos.flush();
