@@ -5,19 +5,18 @@ import org.slf4j.LoggerFactory;
 import webserver.RequestHandler;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StartLine {
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private static final int METHOD_IDX = 0;
     private static final int PARAM_NAME_IDX = 0;
     private static final int PARAM_VALUE_IDX = 1;
 
     private final String method;
+    private final String url;
     private final RequestType requestType;
     private final String path;
     private final Map<String, String> paramMap;
@@ -25,16 +24,18 @@ public class StartLine {
 
     public StartLine(String requestLine) {
         this.method = parseMethod(requestLine);
-
-        String url = parseUrl(requestLine);
+        this.url = parseUrl(requestLine);
         this.requestType = RequestType.of(url);
         this.path = requestType.getAbsolutePath(url);
-
         this.paramMap = parseParams(requestLine);
     }
 
     public String getMethod() {
         return method;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public RequestType getRequestType() {

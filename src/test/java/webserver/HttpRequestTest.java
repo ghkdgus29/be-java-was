@@ -26,8 +26,20 @@ class HttpRequestTest {
     }
 
     @Test
-    @DisplayName("HttpRequest 객체는 Request가 요청한 자료의 절대 경로를 반환한다.")
+    @DisplayName("HttpRequest 객체는 request-line 에 포함된 URL(논리 경로)를 반환한다.")
     void parseUrl() {
+        String requestLine = "GET /index.html HTTP/1.1";
+        Map<String, String> headers = Map.of("Host", "localhost:8080"
+                , "Connection", "keep-alive");
+
+        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
+
+        assertEquals("/index.html", httpRequest.getUrl());
+    }
+
+    @Test
+    @DisplayName("HttpRequest 객체는 Request가 요청한 자료의 절대 경로를 반환한다.")
+    void parsePath() {
         String requestLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
         Map<String, String> headers = Map.of("Host", "localhost:8080"
                 , "Connection", "keep-alive");

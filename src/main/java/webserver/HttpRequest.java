@@ -31,6 +31,10 @@ public class HttpRequest {
         return startLine.getMethod();
     }
 
+    public String getUrl() {
+        return startLine.getUrl();
+    }
+
     public String getPath() {
         return startLine.getPath();
     }
