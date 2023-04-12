@@ -1,8 +1,8 @@
 package webserver;
 
-import model.StartLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.DispatcherServlet;
 import util.RequestSeparater;
 
 import java.io.*;
@@ -30,13 +30,20 @@ public class RequestHandler implements Runnable {
             RequestSeparater requestSeparater = new RequestSeparater(br);
             HttpRequest httpRequest = requestSeparater.askHttpRequest();
 
+            String absolutePath = resolveView(httpRequest);
 
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(httpRequest.getPath()).toPath());
+            byte[] body = Files.readAllBytes(new File(absolutePath).toPath());
 
             HttpResponse.sendResponse200(dos, body, httpRequest);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private static String resolveView(HttpRequest httpRequest) {
+        String viewName = DispatcherServlet.service(httpRequest);
+        String absolutePath = httpRequest.getAbsolutePath(viewName);
+        return absolutePath;
     }
 }
