@@ -26,16 +26,16 @@ public class HttpResponse {
         headers.put(key, value);
     }
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
-
     public void setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
     }
 
     public boolean isRedirect() {
         return statusCode / 100 == 3;
+    }
+
+    public void setCookie(String cookieName, String cookieValue) {
+        addHeader("Set-Cookie", cookieName + "=" +cookieValue + "; Path=/");
     }
 
     public void setContent(String absolutePath, HttpRequest httpRequest) throws IOException {
