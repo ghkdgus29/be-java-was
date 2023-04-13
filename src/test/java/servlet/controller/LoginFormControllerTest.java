@@ -13,7 +13,7 @@ class LoginFormControllerTest {
     void process() {
         LoginFormController loginFormController = new LoginFormController();
 
-        String viewName = loginFormController.process(null);
+        String viewName = loginFormController.process(null, new HttpResponse());
         assertEquals("user/login", viewName);
     }
 }
