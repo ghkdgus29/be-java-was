@@ -27,7 +27,7 @@ class UserSaveControllerTest {
         User findUser = Database.findUserById("1234");
 
         assertThat(users.size()).isEqualTo(1);
-        
+
         assertThat(findUser.getUserId()).isEqualTo("1234");
         assertThat(findUser.getPassword()).isEqualTo("1234");
         assertThat(findUser.getName()).isEqualTo("123");
