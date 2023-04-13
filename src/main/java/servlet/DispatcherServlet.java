@@ -1,9 +1,6 @@
 package servlet;
 
-import servlet.controller.Controller;
-import servlet.controller.IndexController;
-import servlet.controller.UserFormController;
-import servlet.controller.UserSaveController;
+import servlet.controller.*;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 
@@ -23,6 +20,7 @@ public class DispatcherServlet {
         controllerMap.put("/", new IndexController());
         controllerMap.put("/user/form.html", new UserFormController());
         controllerMap.put("/user/create", new UserSaveController());
+        controllerMap.put("/user/login.html", new LoginFormController());
 
         return controllerMap;
     }
