@@ -26,7 +26,7 @@ class UserSaveControllerTest {
     void process() {
         UserSaveController userSaveController = new UserSaveController();
 
-        String viewName = userSaveController.process(Map.of("userId", "1234", "password", "1234", "name", "123", "email", "123%40123"));
+        String viewName = userSaveController.process(Map.of("userId", "1234", "password", "1234", "name", "123", "email", "123%40123"), new HttpResponse());
 
         assertEquals("redirect:/", viewName);
 

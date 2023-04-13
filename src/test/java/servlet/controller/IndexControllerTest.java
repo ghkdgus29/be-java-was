@@ -13,7 +13,7 @@ class IndexControllerTest {
     void process() {
         IndexController indexController = new IndexController();
 
-        String viewName = indexController.process(null);
+        String viewName = indexController.process(null, new HttpResponse());
         assertEquals("index", viewName);
     }
 }

@@ -12,7 +12,7 @@ class UserFormControllerTest {
     @DisplayName("/user/form.html 요청이 들어오면 해당 컨트롤러를 호출하고, user/form 뷰 네임을 반환한다.")
     void process() {
         UserFormController userFormController = new UserFormController();
-        String viewName = userFormController.process(null);
+        String viewName = userFormController.process(null, new HttpResponse());
 
         assertEquals("user/form", viewName);
     }

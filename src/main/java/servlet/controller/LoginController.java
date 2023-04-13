@@ -2,6 +2,7 @@ package servlet.controller;
 
 import db.Database;
 import model.User;
+import webserver.HttpResponse;
 
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +13,7 @@ public class LoginController implements Controller{
     private static final String PASSWORD = "password";
 
     @Override
-    public String process(Map<String, String> parameters) {
+    public String process(Map<String, String> parameters, HttpResponse httpResponse) {
         String userId = parameters.get(USER_ID);
         String password = parameters.get(PASSWORD);
 
