@@ -1,35 +1,53 @@
 package webserver;
 
-import model.RequestType;
-import model.StartLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponse {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    public static void sendResponse200(DataOutputStream dos, byte[] body, StartLine startLine) {
-        try {
-            dos.writeBytes(response200Header(body.length, startLine.getRequestType()));
+    private static final String HTTP_VERSION = "HTTP/1.1";
+    private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+    private int statusCode;
+    private Map<String, String> headers = new HashMap<>();
+    private byte[] messageBody;
+
+    public void setStatusCode(int code) {
+        statusCode = code;
     }
 
-    private static String response200Header(int lengthOfBodyContent, RequestType requestType) {
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
+
+    public boolean isRedirect() {
+        return statusCode / 100 == 3;
+    }
+
+    public void setContent(String absolutePath, HttpRequest httpRequest) throws IOException {
+        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
+
+        addHeader("Content-Type", httpRequest.getRequestType().getContentType());
+        addHeader("Content-Length", String.valueOf(messageBody.length));
+    }
+
+    public byte[] toBytes() {
         StringBuilder sb = new StringBuilder();
-        sb.append("HTTP/1.1 200 OK \r\n");
-        sb.append("Content-Type: " + requestType.getContentType() + "\r\n");
-        sb.append("Content-Length: " + lengthOfBodyContent + "\r\n");
+
+        sb.append(HTTP_VERSION + " " + statusCode + " " + STATUS_MESSAGE.get(statusCode) + " \r\n");
+
+        headers.forEach((k, v) -> {
+            sb.append(k + ": " + v + "\r\n");
+        });
         sb.append("\r\n");
 
-        return sb.toString();
+        return sb.toString().getBytes();
+    }
+
+    public byte[] getMessageBody() {
+        return messageBody;
     }
 }

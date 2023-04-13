@@ -1,13 +1,12 @@
 package webserver;
 
-import model.User;
-import model.StartLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import servlet.DispatcherServlet;
+import util.RequestSeparater;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
 
 public class RequestHandler implements Runnable {
 
@@ -24,28 +23,37 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 
-            String line = br.readLine();
-            StartLine startLine = HttpRequest.getStartLine(line);
+            HttpRequest httpRequest = RequestSeparater.askHttpRequest(br);
+            HttpResponse httpResponse = new HttpResponse();
 
-            if (startLine.getMethod().equals("GET") && startLine.getParamMap() != null) {         // 만약 GET 메서드 요청이 파라미터를 갖고 있다면, User 클래스 생성
-                User user = new User(startLine.getParamMap());
-                logger.debug("{}", user);
+            String viewName = DispatcherServlet.service(httpRequest, httpResponse);             // 컨트롤러가 반환한 viewName
+
+            if (httpResponse.isRedirect()) {                                                    // 리다이렉트 응답 시
+                httpResponse.addHeader("Location", viewName);
+                sendResponseMessage(out, httpResponse);
+                return;
             }
 
-            while (!line.equals("")) {
-                logger.debug(line);
-                line = br.readLine();
-            }
-
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = Files.readAllBytes(new File(startLine.getPath()).toPath());
-
-            HttpResponse.sendResponse200(dos, body, startLine);
+            String absolutePath = resolveView(viewName, httpRequest);                           // 200 응답 시
+            httpResponse.setContent(absolutePath, httpRequest);
+            sendResponseMessage(out, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private static String resolveView(String viewName, HttpRequest httpRequest) {
+        return httpRequest.getAbsolutePath(viewName);
+    }
+
+    private static void sendResponseMessage(OutputStream out, HttpResponse httpResponse) throws IOException {
+        DataOutputStream dos = new DataOutputStream(out);
+        dos.write(httpResponse.toBytes());
+
+        if (!httpResponse.isRedirect()) {
+            dos.write(httpResponse.getMessageBody());
         }
     }
 }

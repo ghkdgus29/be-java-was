@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 public enum RequestType {
 
-    HTML(".html", "text/html;charset=utf-8", "src/main/resources/templates"),
+    HTML(".html", "text/html;charset=utf-8", "src/main/resources/templates/"),
     CSS(".css", "text/css", "src/main/resources/static"),
     JS(".js", "application/javascript", "src/main/resources/static"),
     FONTS(".woff", "application/octet-stream", "src/main/resources/static"),
@@ -22,19 +22,19 @@ public enum RequestType {
         this.basePath = path;
     }
 
-    public static RequestType of(String url) {
+    public static RequestType of(String viewName) {
         return Stream.of(values())
-                .filter(type -> url.endsWith(type.extension))
+                .filter(type -> viewName.endsWith(type.extension))
                 .findAny()
                 .orElse(HTML);
     }
 
-    public String getAbsolutePath(String url) {
-        if (url.equals("/")) {
-            return this.basePath + "/index.html";
+    public String getAbsolutePath(String viewName) {
+        if (this == HTML) {
+            return this.basePath + viewName + ".html";
         }
 
-        return this.basePath + url;
+        return this.basePath + viewName;
     }
 
     public String getContentType() {
