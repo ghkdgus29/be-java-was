@@ -1,10 +1,15 @@
 package servlet.controller;
 
+import db.Database;
+import model.User;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserSaveControllerTest {
@@ -17,5 +22,15 @@ class UserSaveControllerTest {
         String viewName = userSaveController.process(Map.of("userId", "1234", "password", "1234", "name", "123", "email", "123%40123"));
 
         assertEquals("redirect:/", viewName);
+
+        Collection<User> users = Database.findAll();
+        User findUser = Database.findUserById("1234");
+
+        assertThat(users.size()).isEqualTo(1);
+        
+        assertThat(findUser.getUserId()).isEqualTo("1234");
+        assertThat(findUser.getPassword()).isEqualTo("1234");
+        assertThat(findUser.getName()).isEqualTo("123");
+        assertThat(findUser.getEmail()).isEqualTo("123%40123");
     }
 }
