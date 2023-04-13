@@ -1,17 +1,50 @@
 package webserver;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
+
 public class HttpResponse {
 
-    private final String headers;
-    private final byte[] messageBody;
+    private static final String HTTP_VERSION = "HTTP/1.1";
+    private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-    public HttpResponse(String headers, byte[] messageBody) {
-        this.headers = headers;
-        this.messageBody = messageBody;
+    private int statusCode;
+    private Map<String, String> headers = new HashMap<>();
+    private byte[] messageBody;
+
+    public void setStatusCode(int code) {
+        statusCode = code;
     }
 
-    public String getHeaders() {
-        return headers;
+    public void addHeader(String key, String value) {
+        headers.put(key, value);
+    }
+
+    public boolean isRedirect() {
+        return statusCode / 100 == 3;
+    }
+
+    public void setContent(String absolutePath, HttpRequest httpRequest) throws IOException {
+        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
+
+        addHeader("Content-Type", httpRequest.getRequestType().getContentType());
+        addHeader("Content-Length", String.valueOf(messageBody.length));
+    }
+
+    public byte[] toBytes() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(HTTP_VERSION + " " + statusCode + " " + STATUS_MESSAGE.get(statusCode) + " \r\n");
+
+        headers.forEach((k, v) -> {
+            sb.append(k + ": " + v + "\r\n");
+        });
+        sb.append("\r\n");
+
+        return sb.toString().getBytes();
     }
 
     public byte[] getMessageBody() {

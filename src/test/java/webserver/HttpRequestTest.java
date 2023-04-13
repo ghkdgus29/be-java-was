@@ -37,29 +37,6 @@ class HttpRequestTest {
         assertEquals("/index.html", httpRequest.getUrl());
     }
 
-//    @Test
-//    @DisplayName("HttpRequest 객체는 Request가 요청한 자료의 절대 경로를 반환한다.")
-//    void parsePath() {
-//        String requestLine = "GET /user/create?userId=hyun&password=1234&name=%ED%99%A9%ED%98%84&email=ghkdgus29%40naver.com HTTP/1.1";
-//        Map<String, String> headers = Map.of("Host", "localhost:8080"
-//                , "Connection", "keep-alive");
-//
-//        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
-//
-//        assertEquals(PATH + "/user/create", httpRequest.getPath());
-//    }
-
-//    @Test
-//    @DisplayName("HttpRequest 객체는 request-line 에 포함된 URL에 파라미터가 없더라도 자료의 절대 경로를 반환한다.")
-//    void parseUrlWithoutParam() {
-//        String requestLine = "GET /index.html HTTP/1.1";
-//        Map<String, String> headers = Map.of("Host", "localhost:8080"
-//                , "Connection", "keep-alive");
-//
-//        HttpRequest httpRequest = new HttpRequest(requestLine, headers, null);
-//
-//        assertEquals(PATH + "/index.html", httpRequest.getPath());
-//    }
 
     @Test
     @DisplayName("HttpRequest 객체는 headers 를 맵으로 반환한다.")
