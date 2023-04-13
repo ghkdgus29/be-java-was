@@ -1,5 +1,7 @@
 package webserver;
 
+import util.StatusCode;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +15,8 @@ public class HttpResponse {
 
     private int statusCode;
     private Map<String, String> headers = new HashMap<>();
-    private byte[] messageBody;
+    private byte[] messageBody = {};
+    private String redirectUrl;
 
     public void setStatusCode(int code) {
         statusCode = code;
@@ -23,19 +26,33 @@ public class HttpResponse {
         headers.put(key, value);
     }
 
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
     public boolean isRedirect() {
         return statusCode / 100 == 3;
     }
 
     public void setContent(String absolutePath, HttpRequest httpRequest) throws IOException {
-        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
+        if (isRedirect()) {
+            addHeader("Location", redirectUrl);
+            return;
+        }
 
+        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
         addHeader("Content-Type", httpRequest.getRequestType().getContentType());
         addHeader("Content-Length", String.valueOf(messageBody.length));
     }
 
     public byte[] toBytes() {
         StringBuilder sb = new StringBuilder();
+
+        if (!isRedirect()) statusCode = StatusCode.OK;
 
         sb.append(HTTP_VERSION + " " + statusCode + " " + STATUS_MESSAGE.get(statusCode) + " \r\n");
 
