@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.HttpRequest;
 import webserver.HttpResponse;
 
 import java.util.Map;
@@ -27,7 +28,7 @@ class LoginControllerTest {
 
         Database.addUser(new User("hyun", "1234", "황현", "gus@naver.com"));
 
-        String viewName = loginController.process(Map.of(USER_ID, "hyun", PASSWORD, "1234"), new HttpResponse());
+        String viewName = loginController.process(new HttpRequest("POST /user/login HTTP/1.1", Map.of("mock", "mock"), "userId=hyun&password=1234"), new HttpResponse());
         Assertions.assertThat(viewName).isEqualTo("redirect:/");
     }
 
@@ -38,7 +39,7 @@ class LoginControllerTest {
 
         Database.addUser(new User("yoon", "1234", "황윤", "yoon@naver.com"));
 
-        String viewName = loginController.process(Map.of(USER_ID, "hyun", PASSWORD, "1234"), new HttpResponse());
+        String viewName = loginController.process(new HttpRequest("POST /user/login HTTP/1.1", Map.of("mock", "mock"), "userId=hyun&password=1234"), new HttpResponse());
         Assertions.assertThat(viewName).isEqualTo("user/login_failed");
     }
 

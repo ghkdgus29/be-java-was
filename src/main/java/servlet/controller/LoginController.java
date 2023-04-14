@@ -3,6 +3,7 @@ package servlet.controller;
 import db.Database;
 import model.User;
 import util.UserSession;
+import webserver.HttpRequest;
 import webserver.HttpResponse;
 
 import java.util.Map;
@@ -17,7 +18,8 @@ public class LoginController implements Controller{
 
 
     @Override
-    public String process(Map<String, String> parameters, HttpResponse httpResponse) {
+    public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
+        Map<String, String> parameters = httpRequest.getParameters();
         String userId = parameters.get(USER_ID);
         String password = parameters.get(PASSWORD);
 

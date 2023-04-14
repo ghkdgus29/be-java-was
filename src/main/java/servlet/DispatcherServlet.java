@@ -5,6 +5,7 @@ import util.StatusCode;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,24 +28,19 @@ public class DispatcherServlet {
     }
 
 
-    public static String service(HttpRequest httpRequest, HttpResponse httpResponse) {
+    public static void service(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
         String requestUrl = httpRequest.getUrl();
+        Controller controller = controllerMap.getOrDefault(requestUrl, new DefaultController());            // 컨트롤러 맵에 없는 요청의 경우, DefaultController 호출
 
-        Controller controller = controllerMap.get(requestUrl);
-        if (controller == null) {                                               // CSS, JS 와 같은 static 타입 요청이 올 경우
-            return requestUrl;
-        }
+        String viewName = controller.process(httpRequest, httpResponse);
 
-        String viewName = controller.process(httpRequest.getParameters(), httpResponse);
-
-        if (viewName.startsWith("redirect:")) {                                        // redirect 요청일 경우
+        if (viewName.startsWith("redirect:")) {                                                             // redirect 요청일 경우
             String redirectUrl = viewName.split(":")[REDIRECT_URL_IDX];
             httpResponse.setStatusCode(StatusCode.FOUND);
             httpResponse.setRedirectUrl(redirectUrl);
-
-            return "redirect";
         }
 
-        return viewName;                                                        // 뷰를 반환하는 정상 요청인 경우
+        httpResponse.setRequestType(viewName);
+        httpResponse.setContent(viewName);
     }
 }

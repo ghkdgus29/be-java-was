@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.HttpRequest;
 import webserver.HttpResponse;
 
 import java.util.Collection;
@@ -26,7 +27,7 @@ class UserSaveControllerTest {
     void process() {
         UserSaveController userSaveController = new UserSaveController();
 
-        String viewName = userSaveController.process(Map.of("userId", "1234", "password", "1234", "name", "123", "email", "123%40123"), new HttpResponse());
+        String viewName = userSaveController.process(new HttpRequest("POST /user/create HTTP/1.1", Map.of("mock", "mock"), "userId=1234&password=1234&name=123&email=123%40123"), new HttpResponse());
 
         assertEquals("redirect:/", viewName);
 

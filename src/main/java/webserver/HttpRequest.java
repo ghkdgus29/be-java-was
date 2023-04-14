@@ -1,6 +1,5 @@
 package webserver;
 
-import model.RequestType;
 import model.RequestLine;
 
 import java.util.HashMap;
@@ -34,14 +33,6 @@ public class HttpRequest {
     }
     public String getUrl() {
         return requestLine.getUrl();
-    }
-
-    public String getAbsolutePath(String viewName) {
-        return getRequestType().getAbsolutePath(viewName);
-    }
-
-    public RequestType getRequestType() {
-        return requestLine.getRequestType();
     }
 
     public Map<String, String> getHeaders() {
@@ -104,6 +95,4 @@ public class HttpRequest {
 
         return cookies;
     }
-
-
 }

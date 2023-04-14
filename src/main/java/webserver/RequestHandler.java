@@ -28,18 +28,12 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = RequestSeparater.askHttpRequest(br);
             HttpResponse httpResponse = new HttpResponse();
 
-            String viewName = DispatcherServlet.service(httpRequest, httpResponse);
-            String absolutePath = resolveView(viewName, httpRequest);
+            DispatcherServlet.service(httpRequest, httpResponse);
 
-            httpResponse.setContent(absolutePath, httpRequest);
             sendResponseMessage(out, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-    }
-
-    private static String resolveView(String viewName, HttpRequest httpRequest) {
-        return httpRequest.getAbsolutePath(viewName);
     }
 
     private static void sendResponseMessage(OutputStream out, HttpResponse httpResponse) throws IOException {

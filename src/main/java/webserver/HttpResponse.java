@@ -1,5 +1,6 @@
 package webserver;
 
+import model.RequestType;
 import util.StatusCode;
 
 import java.io.File;
@@ -13,10 +14,12 @@ public class HttpResponse {
     private static final String HTTP_VERSION = "HTTP/1.1";
     private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-    private int statusCode;
+    private int statusCode = StatusCode.OK;
     private Map<String, String> headers = new HashMap<>();
     private byte[] messageBody = {};
     private String redirectUrl;
+
+    private RequestType requestType;
 
     public void setStatusCode(int code) {
         statusCode = code;
@@ -38,21 +41,23 @@ public class HttpResponse {
         addHeader("Set-Cookie", cookieName + "=" +cookieValue + "; Path=/");
     }
 
-    public void setContent(String absolutePath, HttpRequest httpRequest) throws IOException {
+    public void setContent(String viewName) throws IOException {
         if (isRedirect()) {
             addHeader("Location", redirectUrl);
             return;
         }
 
-        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
-        addHeader("Content-Type", httpRequest.getRequestType().getContentType());
+        this.messageBody = Files.readAllBytes(new File(requestType.getAbsolutePath(viewName)).toPath());
+        addHeader("Content-Type", requestType.getContentType());
         addHeader("Content-Length", String.valueOf(messageBody.length));
+    }
+
+    public void setRequestType(String viewName) {
+        this.requestType = RequestType.of(viewName);
     }
 
     public byte[] toBytes() {
         StringBuilder sb = new StringBuilder();
-
-        if (!isRedirect()) statusCode = StatusCode.OK;
 
         sb.append(HTTP_VERSION + " " + statusCode + " " + STATUS_MESSAGE.get(statusCode) + " \r\n");
 
@@ -67,4 +72,5 @@ public class HttpResponse {
     public byte[] getMessageBody() {
         return messageBody;
     }
+
 }

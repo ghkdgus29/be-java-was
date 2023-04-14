@@ -4,6 +4,7 @@ import db.Database;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.HttpRequest;
 import webserver.HttpResponse;
 import webserver.RequestHandler;
 
@@ -19,7 +20,8 @@ public class UserSaveController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     @Override
-    public String process(Map<String, String> parameters, HttpResponse httpResponse) {
+    public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
+        Map<String, String> parameters = httpRequest.getParameters();
         String userId = parameters.get(USER_ID);
         String password = parameters.get(PASSWORD);
         String name = parameters.get(NAME);

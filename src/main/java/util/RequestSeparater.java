@@ -55,6 +55,4 @@ public class RequestSeparater {
         String headerValue = splitedLine[HEADER_VALUE_IDX].trim();
         headers.put(headerName, headerValue);
     }
-
-
 }
