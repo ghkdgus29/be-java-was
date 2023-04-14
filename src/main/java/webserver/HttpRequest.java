@@ -1,14 +1,13 @@
 package webserver;
 
 import model.RequestLine;
+import util.RequestMethod;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
 
-    private static final String GET = "GET";
-    private static final String POST = "POST";
     private static final int PARAM_NAME_IDX = 0;
     private static final int PARAM_VALUE_IDX = 1;
     private static final String COOKIE = "Cookie";
@@ -52,11 +51,11 @@ public class HttpRequest {
     }
 
     private Map<String, String> setParameters() {
-        if (requestLine.getMethod().equals(GET)) {
+        if (requestLine.getMethod().equals(RequestMethod.GET)) {
             return requestLine.getParamMap();
         }
 
-        if (requestLine.getMethod().equals(POST)) {
+        if (requestLine.getMethod().equals(RequestMethod.POST)) {
             return parseParametersBy(messageBody);
         }
 
