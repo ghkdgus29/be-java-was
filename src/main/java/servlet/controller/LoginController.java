@@ -2,6 +2,7 @@ package servlet.controller;
 
 import db.Database;
 import model.User;
+import util.UserSession;
 import webserver.HttpResponse;
 
 import java.util.Map;
@@ -31,6 +32,8 @@ public class LoginController implements Controller{
 
         String uuid = UUID.randomUUID().toString();
         httpResponse.setCookie(COOKIE_NAME, uuid);
+        UserSession.addUser(uuid, findUser.get());
+
         return "redirect:/";
     }
 }
