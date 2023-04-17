@@ -1,11 +1,11 @@
 package db;
 
 import com.google.common.collect.Maps;
-
 import model.User;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Database {
     private static Map<String, User> users = Maps.newHashMap();
@@ -18,8 +18,10 @@ public class Database {
         return users.get(userId);
     }
 
-    public static Collection<User> findAll() {
-        return users.values();
+    public static List<User> findAll() {
+        return users.entrySet().stream()
+                .map(e -> e.getValue())
+                .collect(Collectors.toList());
     }
 
     public static void deleteAll() {

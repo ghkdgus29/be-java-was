@@ -1,5 +1,6 @@
 package webserver;
 
+import db.Database;
 import model.RequestType;
 import model.User;
 import util.StatusCode;
@@ -10,7 +11,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HttpResponse {
@@ -18,6 +21,7 @@ public class HttpResponse {
     private static final String HTTP_VERSION = "HTTP/1.1";
 
     private static final String LOGIN_ELEMENT = "로그인";
+    private static final String USERS_LIST_ELEMENT = "<tbody class=\"user-list\">";
 
 
     private StatusCode statusCode = StatusCode.OK;
@@ -90,6 +94,7 @@ public class HttpResponse {
      * HTML 인 경우, 한 줄씩 읽기 위해 BufferedReader, FileReader 를 사용해서 파일 정보를 불러온다.
      * (동적 HTML을 작성하기 위해)
      * HTML 이 아닌 경우, 문자열이 아닐 수 있고, 한 줄씩 읽어올 필요도 없으므로 readAllBytes 를 사용한다.
+     *
      * @param viewName
      * @return
      */
@@ -114,6 +119,7 @@ public class HttpResponse {
     /**
      * HTML 에서 현재 읽어온 부분이 LOGIN_ELEMENT 이고, 현재 로그인을 성공해 세션이 존재하는 경우
      * LOGIN_ELEMENT 를 이름으로 변경한다.
+     *
      * @param cookies
      * @param line
      * @return
@@ -124,6 +130,21 @@ public class HttpResponse {
             String userId = sessionUser.getUserId();
             line = "\t\t\t\t<li><a href=\"#\" style=\"font-weight: 900\">" + userId + "</a></li>\r\n";
         }
+
+        StringBuilder sb = new StringBuilder();
+        if (line.contains(USERS_LIST_ELEMENT)) {
+            sb.append(line);
+
+            List<User> users = Database.findAll();
+            for (int i = 0; i < users.size(); i++) {
+                User user = users.get(i);
+                sb.append("\t\t\t\t<tr>\r\n");
+                sb.append("\t\t\t\t\t<th scope=\"row\">" + (i + 1) + "</th> <td>" +user.getUserId() + "</td> <td>" + user.getName() + "</td> <td>" + user.getEmail() + "</td><td><a href=\"#\" class=\"btn btn-success\" role=\"button\">수정</a></td>\r\n");
+                sb.append("\t\t\t\t</tr>\r\n");
+            }
+            line = sb.toString();
+        }
+
         return line;
     }
 }
