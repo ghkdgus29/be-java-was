@@ -17,7 +17,7 @@ public class HttpResponse {
 
     private static final String HTTP_VERSION = "HTTP/1.1";
 
-    private static final String LOGIN_ELEMENT = "<li><a href=\"user/login.html\" role=\"button\">로그인</a></li>";
+    private static final String LOGIN_ELEMENT = "로그인";
 
 
     private StatusCode statusCode = StatusCode.OK;
