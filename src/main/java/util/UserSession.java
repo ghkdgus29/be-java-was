@@ -31,6 +31,9 @@ public class UserSession {
     }
 
     public static Boolean contains(Map<String, String> cookies) {
+        if (cookies == null) {
+            return false;
+        }
         if (!cookies.containsKey(COOKIE_NAME)) {
             return false;
         }
