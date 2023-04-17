@@ -49,7 +49,7 @@ public class DispatcherServlet {
         }
 
         httpResponse.setRequestType(viewName);
-        httpResponse.setContent(viewName);
+        httpResponse.setContent(viewName, httpRequest.getCookies());
     }
 
     private static Controller getController(String requestMethod, String requestUrl) {

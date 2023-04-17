@@ -30,4 +30,11 @@ public class UserSession {
         return userSession.get(uuid);
     }
 
+    public static Boolean contains(Map<String, String> cookies) {
+        if (!cookies.containsKey(COOKIE_NAME)) {
+            return false;
+        }
+
+        return userSession.containsKey(cookies.get(COOKIE_NAME));
+    }
 }
