@@ -2,6 +2,7 @@ package servlet.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,7 +13,7 @@ class IndexControllerTest {
     void process() {
         IndexController indexController = new IndexController();
 
-        String viewName = indexController.process(null);
+        String viewName = indexController.process(null, new HttpResponse());
         assertEquals("index", viewName);
     }
 }

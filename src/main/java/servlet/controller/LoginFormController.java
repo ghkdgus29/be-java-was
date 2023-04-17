@@ -5,10 +5,10 @@ import webserver.HttpResponse;
 
 import java.util.Map;
 
-public class UserFormController implements Controller{
+public class LoginFormController implements Controller {
 
     @Override
     public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
-        return "user/form";
+        return "user/login";
     }
 }

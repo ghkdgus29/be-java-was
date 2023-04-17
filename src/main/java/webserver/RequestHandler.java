@@ -28,32 +28,17 @@ public class RequestHandler implements Runnable {
             HttpRequest httpRequest = RequestSeparater.askHttpRequest(br);
             HttpResponse httpResponse = new HttpResponse();
 
-            String viewName = DispatcherServlet.service(httpRequest, httpResponse);             // 컨트롤러가 반환한 viewName
+            DispatcherServlet.service(httpRequest, httpResponse);
 
-            if (httpResponse.isRedirect()) {                                                    // 리다이렉트 응답 시
-                httpResponse.addHeader("Location", viewName);
-                sendResponseMessage(out, httpResponse);
-                return;
-            }
-
-            String absolutePath = resolveView(viewName, httpRequest);                           // 200 응답 시
-            httpResponse.setContent(absolutePath, httpRequest);
             sendResponseMessage(out, httpResponse);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private static String resolveView(String viewName, HttpRequest httpRequest) {
-        return httpRequest.getAbsolutePath(viewName);
-    }
-
     private static void sendResponseMessage(OutputStream out, HttpResponse httpResponse) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         dos.write(httpResponse.toBytes());
-
-        if (!httpResponse.isRedirect()) {
-            dos.write(httpResponse.getMessageBody());
-        }
+        dos.write(httpResponse.getMessageBody());
     }
 }

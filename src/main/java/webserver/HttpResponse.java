@@ -1,5 +1,8 @@
 package webserver;
 
+import model.RequestType;
+import util.StatusCode;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,9 +14,12 @@ public class HttpResponse {
     private static final String HTTP_VERSION = "HTTP/1.1";
     private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
 
-    private int statusCode;
+    private int statusCode = StatusCode.OK;
     private Map<String, String> headers = new HashMap<>();
-    private byte[] messageBody;
+    private byte[] messageBody = {};
+    private String redirectUrl;
+
+    private RequestType requestType;
 
     public void setStatusCode(int code) {
         statusCode = code;
@@ -23,15 +29,31 @@ public class HttpResponse {
         headers.put(key, value);
     }
 
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
     public boolean isRedirect() {
         return statusCode / 100 == 3;
     }
 
-    public void setContent(String absolutePath, HttpRequest httpRequest) throws IOException {
-        this.messageBody = Files.readAllBytes(new File(absolutePath).toPath());
+    public void setCookie(String cookieName, String cookieValue) {
+        addHeader("Set-Cookie", cookieName + "=" +cookieValue + "; Path=/");
+    }
 
-        addHeader("Content-Type", httpRequest.getRequestType().getContentType());
+    public void setContent(String viewName) throws IOException {
+        if (isRedirect()) {
+            addHeader("Location", redirectUrl);
+            return;
+        }
+
+        this.messageBody = Files.readAllBytes(new File(requestType.getAbsolutePath(viewName)).toPath());
+        addHeader("Content-Type", requestType.getContentType());
         addHeader("Content-Length", String.valueOf(messageBody.length));
+    }
+
+    public void setRequestType(String viewName) {
+        this.requestType = RequestType.of(viewName);
     }
 
     public byte[] toBytes() {
@@ -50,4 +72,5 @@ public class HttpResponse {
     public byte[] getMessageBody() {
         return messageBody;
     }
+
 }

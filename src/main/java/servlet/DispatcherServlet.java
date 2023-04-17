@@ -1,50 +1,62 @@
 package servlet;
 
-import servlet.controller.Controller;
-import servlet.controller.IndexController;
-import servlet.controller.UserFormController;
-import servlet.controller.UserSaveController;
+import servlet.controller.*;
+import util.RequestMethod;
+import util.StatusCode;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DispatcherServlet {
 
-    private static final int OK = 200;
-    private static final int FOUND = 302;
     private static final int REDIRECT_URL_IDX = 1;
-    private static final Map<String, Controller> controllerMap = addController();
+    private static final Map<String, Controller> getControllerMap = addGetController();
 
-    private static Map<String, Controller> addController() {
+    private static final Map<String, Controller> postControllerMap = addPostController();
+
+    private static Map<String, Controller> addGetController() {
         HashMap<String, Controller> controllerMap = new HashMap<>();
 
         controllerMap.put("/", new IndexController());
+        controllerMap.put("/index.html", new IndexController());
         controllerMap.put("/user/form.html", new UserFormController());
+        controllerMap.put("/user/login.html", new LoginFormController());
+
+        return controllerMap;
+    }
+
+    private static Map<String, Controller> addPostController() {
+        HashMap<String, Controller> controllerMap = new HashMap<>();
+
         controllerMap.put("/user/create", new UserSaveController());
+        controllerMap.put("/user/login", new LoginController());
 
         return controllerMap;
     }
 
 
-    public static String service(HttpRequest httpRequest, HttpResponse httpResponse) {
-        String requestUrl = httpRequest.getUrl();
+    public static void service(HttpRequest httpRequest, HttpResponse httpResponse) throws IOException {
+        Controller controller = getController(httpRequest.getMethod(), httpRequest.getUrl());
+        String viewName = controller.process(httpRequest, httpResponse);
 
-        Controller controller = controllerMap.get(requestUrl);
-        if (controller == null) {                                               // CSS, JS 와 같은 static 타입 요청이 올 경우
-            httpResponse.setStatusCode(OK);
-            return requestUrl;
+        if (viewName.startsWith("redirect:")) {                                                                 // redirect 요청일 경우
+            String redirectUrl = viewName.split(":")[REDIRECT_URL_IDX];
+            httpResponse.setStatusCode(StatusCode.FOUND);
+            httpResponse.setRedirectUrl(redirectUrl);
         }
 
-        String viewName = controller.process(httpRequest.getParameters());
+        httpResponse.setRequestType(viewName);
+        httpResponse.setContent(viewName);
+    }
 
-        if (viewName.startsWith("redirect:")) {                                 // redirect 요청일 경우
-            httpResponse.setStatusCode(FOUND);
-            return viewName.split(":")[REDIRECT_URL_IDX];
+    private static Controller getController(String requestMethod, String requestUrl) {
+        if (requestMethod.equals(RequestMethod.GET)) {
+            return getControllerMap.getOrDefault(requestUrl, new DefaultController());
         }
 
-        httpResponse.setStatusCode(200);
-        return viewName;                                                        // 뷰를 반환하는 정상 요청인 경우
+        return postControllerMap.getOrDefault(requestUrl, new DefaultController());
     }
 }

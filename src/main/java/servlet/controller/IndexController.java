@@ -1,11 +1,14 @@
 package servlet.controller;
 
+import webserver.HttpRequest;
+import webserver.HttpResponse;
+
 import java.util.Map;
 
 public class IndexController implements Controller {
 
     @Override
-    public String process(Map<String, String> parameters) {
+    public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
         return "index";
     }
 }

@@ -1,8 +1,11 @@
 package servlet.controller;
 
+import db.Database;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.HttpRequest;
+import webserver.HttpResponse;
 import webserver.RequestHandler;
 
 import java.util.Map;
@@ -17,13 +20,15 @@ public class UserSaveController implements Controller {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     @Override
-    public String process(Map<String, String> parameters) {
+    public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
+        Map<String, String> parameters = httpRequest.getParameters();
         String userId = parameters.get(USER_ID);
         String password = parameters.get(PASSWORD);
         String name = parameters.get(NAME);
         String email = parameters.get(EMAIL);
 
         User user = new User(userId, password, name, email);
+        Database.addUser(user);
 
         logger.debug("생성한 유저 : {}", user);
 
