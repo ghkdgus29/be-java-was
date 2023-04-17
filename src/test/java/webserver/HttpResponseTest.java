@@ -2,6 +2,7 @@ package webserver;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import util.StatusCode;
 
 import java.util.Arrays;
 
@@ -14,7 +15,7 @@ class HttpResponseTest {
     void addHeader() {
         HttpResponse httpResponse = new HttpResponse();
 
-        httpResponse.setStatusCode(200);
+        httpResponse.setStatusCode(StatusCode.OK);
         httpResponse.addHeader("Name", "Hyun");
 
         String sb = "HTTP/1.1 200 OK \r\n" +

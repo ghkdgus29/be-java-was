@@ -12,17 +12,15 @@ import java.util.Map;
 public class HttpResponse {
 
     private static final String HTTP_VERSION = "HTTP/1.1";
-    private static final Map<Integer, String> STATUS_MESSAGE = Map.of(200, "OK", 302, "FOUND");
-
-    private int statusCode = StatusCode.OK;
+    private StatusCode statusCode = StatusCode.OK;
     private Map<String, String> headers = new HashMap<>();
     private byte[] messageBody = {};
     private String redirectUrl;
 
     private RequestType requestType;
 
-    public void setStatusCode(int code) {
-        statusCode = code;
+    public void setStatusCode(StatusCode statusCode) {
+        this.statusCode = statusCode;
     }
 
     public void addHeader(String key, String value) {
@@ -34,11 +32,11 @@ public class HttpResponse {
     }
 
     public boolean isRedirect() {
-        return statusCode / 100 == 3;
+        return statusCode.isRedirect();
     }
 
     public void setCookie(String cookieName, String cookieValue) {
-        addHeader("Set-Cookie", cookieName + "=" +cookieValue + "; Path=/");
+        addHeader("Set-Cookie", cookieName + "=" + cookieValue + "; Path=/");
     }
 
     public void setContent(String viewName) throws IOException {
@@ -59,7 +57,7 @@ public class HttpResponse {
     public byte[] toBytes() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(HTTP_VERSION + " " + statusCode + " " + STATUS_MESSAGE.get(statusCode) + " \r\n");
+        sb.append(HTTP_VERSION + " " + statusCode.getStatusValue() + " " + statusCode + " \r\n");
 
         headers.forEach((k, v) -> {
             sb.append(k + ": " + v + "\r\n");
