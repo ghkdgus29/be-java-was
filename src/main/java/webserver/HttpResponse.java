@@ -120,6 +120,9 @@ public class HttpResponse {
      * HTML 에서 현재 읽어온 부분이 LOGIN_ELEMENT 이고, 현재 로그인을 성공해 세션이 존재하는 경우
      * LOGIN_ELEMENT 를 이름으로 변경한다.
      *
+     * HTML 에서 현재 읽어온 부분이 USERS_LIST_ELEMENT 이면,
+     * 동적으로 유저리스트를 생성해 반환한다.
+     *
      * @param cookies
      * @param line
      * @return
