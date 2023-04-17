@@ -64,11 +64,16 @@ public class HttpResponse {
         });
         sb.append("\r\n");
 
-        return sb.toString().getBytes();
+        byte[] headers = sb.toString().getBytes();
+        byte[] messageBody = this.messageBody;
+
+        return concatHeadersAndBody(headers, messageBody);
     }
 
-    public byte[] getMessageBody() {
-        return messageBody;
+    private static byte[] concatHeadersAndBody(byte[] headers, byte[] messageBody) {
+        byte[] result = new byte[headers.length + messageBody.length];
+        System.arraycopy(headers, 0, result, 0, headers.length);
+        System.arraycopy(messageBody, 0, result, headers.length, messageBody.length);
+        return result;
     }
-
 }
