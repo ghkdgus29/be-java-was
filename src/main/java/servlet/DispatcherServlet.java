@@ -1,6 +1,8 @@
 package servlet;
 
+import model.User;
 import servlet.controller.*;
+import session.UserSession;
 import util.RequestMethod;
 import util.StatusCode;
 import webserver.HttpRequest;
@@ -49,8 +51,10 @@ public class DispatcherServlet {
             httpResponse.setRedirectUrl(redirectUrl);
         }
 
+        User sessionUser = UserSession.get(httpRequest.getCookies());
+
         httpResponse.setRequestType(viewName);
-        httpResponse.setContent(viewName, httpRequest.getCookies());
+        httpResponse.setContent(viewName, sessionUser);
     }
 
     private static Controller getController(String requestMethod, String requestUrl) {

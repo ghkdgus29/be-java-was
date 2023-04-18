@@ -20,20 +20,15 @@ public class UserSession {
     }
 
     public static User get(Map<String, String> cookies) {
-        if (!cookies.containsKey(SESSION_KEY)) {
-            throw new IllegalArgumentException("[ERROR] 로그인이 필요합니다.");
+        if (!hasSession(cookies)) {
+            return null;
         }
 
         String uuid = cookies.get(SESSION_KEY);
-
-        if (!userSession.containsKey(uuid)) {
-            throw new IllegalArgumentException("[ERROR] 로그인이 필요합니다.");
-        }
-
         return userSession.get(uuid);
     }
 
-    public static Boolean hasSession(Map<String, String> cookies) {
+    private static Boolean hasSession(Map<String, String> cookies) {
         if (cookies == null) {
             return false;
         }

@@ -1,18 +1,17 @@
 package servlet.controller;
 
+import model.User;
 import session.UserSession;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
-
-import java.util.Map;
 
 public class UserListController implements Controller {
 
     @Override
     public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
-        Map<String, String> cookies = httpRequest.getCookies();
+        User sessionUser = UserSession.get(httpRequest.getCookies());
 
-        if (!UserSession.hasSession(cookies)) {
+        if (sessionUser == null) {
             return "redirect:/";
         }
 

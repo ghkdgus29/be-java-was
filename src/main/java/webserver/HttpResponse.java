@@ -4,7 +4,6 @@ import db.Database;
 import model.RequestType;
 import model.User;
 import util.StatusCode;
-import session.UserSession;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -50,13 +49,13 @@ public class HttpResponse {
         addHeader("Set-Cookie", cookieName + "=" + cookieValue + "; Path=/");
     }
 
-    public void setContent(String viewName, Map<String, String> cookies) throws IOException {
+    public void setContent(String viewName, User sessionUser) throws IOException {
         if (isRedirect()) {
             addHeader("Location", redirectUrl);
             return;
         }
 
-        this.messageBody = getFile(viewName, cookies);
+        this.messageBody = getFile(viewName, sessionUser);
 
         addHeader("Content-Type", requestType.getContentType());
         addHeader("Content-Length", String.valueOf(messageBody.length));
@@ -97,7 +96,7 @@ public class HttpResponse {
      * @param viewName
      * @return
      */
-    private byte[] getFile(String viewName, Map<String, String> cookies) throws IOException {
+    private byte[] getFile(String viewName, User sessionUser) throws IOException {
         if (requestType == RequestType.HTML) {
             try (FileReader fr = new FileReader(requestType.getAbsolutePath(viewName));
                  BufferedReader br = new BufferedReader(fr)) {
@@ -105,7 +104,7 @@ public class HttpResponse {
                 StringBuilder sb = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
-                    line = generateDynamicHTML(cookies, line);
+                    line = generateDynamicHTML(sessionUser, line);
                     sb.append(line + "\r\n");
                 }
                 return sb.toString().getBytes();
@@ -122,13 +121,12 @@ public class HttpResponse {
      * HTML 에서 현재 읽어온 부분이 USERS_LIST_ELEMENT 이면,
      * 동적으로 유저리스트를 생성해 반환한다.
      *
-     * @param cookies
+     * @param sessionUser
      * @param line
      * @return
      */
-    private static String generateDynamicHTML(Map<String, String> cookies, String line) {
-        if (line.contains(LOGIN_ELEMENT) && UserSession.hasSession(cookies)) {
-            User sessionUser = UserSession.get(cookies);
+    private static String generateDynamicHTML(User sessionUser, String line) {
+        if (line.contains(LOGIN_ELEMENT) && (sessionUser != null)) {
             String userId = sessionUser.getUserId();
             line = "\t\t\t\t<li><a href=\"#\" style=\"font-weight: 900\">" + userId + "</a></li>\r\n";
         }
