@@ -127,7 +127,7 @@ public class HttpResponse {
      * @return
      */
     private static String generateDynamicHTML(Map<String, String> cookies, String line) {
-        if (line.contains(LOGIN_ELEMENT) && UserSession.contains(cookies)) {
+        if (line.contains(LOGIN_ELEMENT) && UserSession.hasSession(cookies)) {
             User sessionUser = UserSession.get(cookies);
             String userId = sessionUser.getUserId();
             line = "\t\t\t\t<li><a href=\"#\" style=\"font-weight: 900\">" + userId + "</a></li>\r\n";

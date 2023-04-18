@@ -12,7 +12,7 @@ public class UserListController implements Controller {
     public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
         Map<String, String> cookies = httpRequest.getCookies();
 
-        if (!UserSession.contains(cookies)) {
+        if (!UserSession.hasSession(cookies)) {
             return "redirect:/";
         }
 

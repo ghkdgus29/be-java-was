@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class UserSession {
 
-    private static final String COOKIE_NAME = "sid";
+    private static final String SESSION_KEY = "sid";
 
     private static final Map<String, User> userSession  = new HashMap<>();
 
@@ -20,11 +20,11 @@ public class UserSession {
     }
 
     public static User get(Map<String, String> cookies) {
-        if (!cookies.containsKey(COOKIE_NAME)) {
+        if (!cookies.containsKey(SESSION_KEY)) {
             throw new IllegalArgumentException("[ERROR] 로그인이 필요합니다.");
         }
 
-        String uuid = cookies.get(COOKIE_NAME);
+        String uuid = cookies.get(SESSION_KEY);
 
         if (!userSession.containsKey(uuid)) {
             throw new IllegalArgumentException("[ERROR] 로그인이 필요합니다.");
@@ -33,14 +33,14 @@ public class UserSession {
         return userSession.get(uuid);
     }
 
-    public static Boolean contains(Map<String, String> cookies) {
+    public static Boolean hasSession(Map<String, String> cookies) {
         if (cookies == null) {
             return false;
         }
-        if (!cookies.containsKey(COOKIE_NAME)) {
+        if (!cookies.containsKey(SESSION_KEY)) {
             return false;
         }
 
-        return userSession.containsKey(cookies.get(COOKIE_NAME));
+        return userSession.containsKey(cookies.get(SESSION_KEY));
     }
 }
