@@ -4,6 +4,7 @@ import model.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class UserSession {
 
@@ -12,8 +13,10 @@ public class UserSession {
     private static final Map<String, User> userSession  = new HashMap<>();
 
 
-    public static void addUser(String uuid, User user) {
+    public static String addUser(User user) {
+        String uuid = UUID.randomUUID().toString();
         userSession.put(uuid, user);
+        return uuid;
     }
 
     public static User get(Map<String, String> cookies) {

@@ -15,8 +15,8 @@ class UserListControllerTest {
     @Test
     @DisplayName("/user/list.html 요청 시, 로그인 한 유저는 유저 목록을 보여주는 user/list 뷰네임을 반환한다.")
     void process() {
-        UserSession.addUser("1234", new User("hyun", "1234", "hyun", "hyun@naver.com"));
-        HttpRequest httpRequest = new HttpRequest("GET /user/list.html HTTP/1.1", Map.of("Cookie", "sid=1234"), null);
+        String uuid = UserSession.addUser(new User("hyun", "1234", "hyun", "hyun@naver.com"));
+        HttpRequest httpRequest = new HttpRequest("GET /user/list.html HTTP/1.1", Map.of("Cookie", "sid=" + uuid), null);
         HttpResponse httpResponse = new HttpResponse();
 
         UserListController userListController = new UserListController();
@@ -28,7 +28,7 @@ class UserListControllerTest {
     @Test
     @DisplayName("/user/list.html 요청 시, 로그인 하지 않은 경우엔 메인페이지로 리디렉션한다.")
     void processFail() {
-        UserSession.addUser("1234", new User("hyun", "1234", "hyun", "hyun@naver.com"));
+        UserSession.addUser(new User("hyun", "1234", "hyun", "hyun@naver.com"));
         HttpRequest httpRequest = new HttpRequest("GET /user/list.html HTTP/1.1", Map.of("mock", "mock"), null);
         HttpResponse httpResponse = new HttpResponse();
 

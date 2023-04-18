@@ -8,13 +8,12 @@ import webserver.HttpResponse;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 public class LoginController implements Controller{
 
     private static final String USER_ID = "userId";
     private static final String PASSWORD = "password";
-    private static final String COOKIE_NAME = "sid";
+    private static final String SESSION_KEY = "sid";
 
 
     @Override
@@ -32,9 +31,8 @@ public class LoginController implements Controller{
             return "user/login_failed";
         }
 
-        String uuid = UUID.randomUUID().toString();
-        httpResponse.setCookie(COOKIE_NAME, uuid);
-        UserSession.addUser(uuid, findUser.get());
+        String uuid = UserSession.addUser(findUser.get());
+        httpResponse.setCookie(SESSION_KEY, uuid);
 
         return "redirect:/";
     }

@@ -18,9 +18,8 @@ class UserSessionTest {
     @Test
     @DisplayName("uuid를 key, 현재 로그인한 User 객체를 value 로 userSession 에 저장한다.")
     void sessionSaveAndGet() {
-        String uuid = UUID.randomUUID().toString();
         User user = new User("hyun", "1234", "hyun", "hyun@naver.com");
-        UserSession.addUser(uuid, user);
+        String uuid = UserSession.addUser(user);
 
         Map<String, String> cookies = Map.of(COOKIE_NAME, uuid);
         User sessionUser = UserSession.get(cookies);
