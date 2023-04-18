@@ -1,6 +1,6 @@
 package servlet.controller;
 
-import util.UserSession;
+import session.UserSession;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 

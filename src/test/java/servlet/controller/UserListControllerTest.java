@@ -4,7 +4,7 @@ import model.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import util.UserSession;
+import session.UserSession;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 

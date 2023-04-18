@@ -4,14 +4,13 @@ import db.Database;
 import model.RequestType;
 import model.User;
 import util.StatusCode;
-import util.UserSession;
+import session.UserSession;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

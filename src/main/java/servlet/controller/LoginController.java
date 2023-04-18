@@ -2,7 +2,7 @@ package servlet.controller;
 
 import db.Database;
 import model.User;
-import util.UserSession;
+import session.UserSession;
 import webserver.HttpRequest;
 import webserver.HttpResponse;
 
