@@ -1,7 +1,21 @@
 package util;
 
-public class StatusCode {
+public enum StatusCode {
 
-    public static final int OK = 200;
-    public static final int FOUND = 302;
+    OK(200), FOUND(302);
+
+    public int statusValue;
+
+    StatusCode(int statusValue) {
+        this.statusValue = statusValue;
+    }
+
+    public boolean isRedirect() {
+        return this == FOUND;
+    }
+
+    public int getStatusValue() {
+        return statusValue;
+    }
 }
+

@@ -39,6 +39,6 @@ class UserSaveControllerTest {
         assertThat(findUser.getUserId()).isEqualTo("1234");
         assertThat(findUser.getPassword()).isEqualTo("1234");
         assertThat(findUser.getName()).isEqualTo("123");
-        assertThat(findUser.getEmail()).isEqualTo("123%40123");
+        assertThat(findUser.getEmail()).isEqualTo("123@123");
     }
 }

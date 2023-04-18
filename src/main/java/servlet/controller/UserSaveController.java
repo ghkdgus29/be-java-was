@@ -8,6 +8,8 @@ import webserver.HttpRequest;
 import webserver.HttpResponse;
 import webserver.RequestHandler;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class UserSaveController implements Controller {
@@ -22,10 +24,11 @@ public class UserSaveController implements Controller {
     @Override
     public String process(HttpRequest httpRequest, HttpResponse httpResponse) {
         Map<String, String> parameters = httpRequest.getParameters();
-        String userId = parameters.get(USER_ID);
-        String password = parameters.get(PASSWORD);
-        String name = parameters.get(NAME);
-        String email = parameters.get(EMAIL);
+
+        String userId = decodeParameter(parameters, USER_ID);
+        String password = decodeParameter(parameters, PASSWORD);
+        String name = decodeParameter(parameters, NAME);
+        String email = decodeParameter(parameters, EMAIL);
 
         User user = new User(userId, password, name, email);
         Database.addUser(user);
@@ -33,5 +36,10 @@ public class UserSaveController implements Controller {
         logger.debug("생성한 유저 : {}", user);
 
         return "redirect:/";
+    }
+
+    private String decodeParameter(Map<String, String> parameters, String parameterName) {
+        String param = parameters.get(parameterName);
+        return URLDecoder.decode(param, StandardCharsets.UTF_8);
     }
 }

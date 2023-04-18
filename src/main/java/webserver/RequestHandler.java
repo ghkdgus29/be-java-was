@@ -39,6 +39,5 @@ public class RequestHandler implements Runnable {
     private static void sendResponseMessage(OutputStream out, HttpResponse httpResponse) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
         dos.write(httpResponse.toBytes());
-        dos.write(httpResponse.getMessageBody());
     }
 }

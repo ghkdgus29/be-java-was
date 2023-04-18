@@ -24,6 +24,7 @@ public class DispatcherServlet {
         controllerMap.put("/index.html", new IndexController());
         controllerMap.put("/user/form.html", new UserFormController());
         controllerMap.put("/user/login.html", new LoginFormController());
+        controllerMap.put("/user/list.html", new UserListController());
 
         return controllerMap;
     }
@@ -49,7 +50,7 @@ public class DispatcherServlet {
         }
 
         httpResponse.setRequestType(viewName);
-        httpResponse.setContent(viewName);
+        httpResponse.setContent(viewName, httpRequest.getCookies());
     }
 
     private static Controller getController(String requestMethod, String requestUrl) {
